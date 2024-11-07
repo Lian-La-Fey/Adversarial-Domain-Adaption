@@ -8,7 +8,7 @@ from GradRev.models import Net, AdversarialNet
 from dataset import get_data_loaders, class_to_idx
 from config import args, device, set_seed
 from train_source import train_source
-from utils import get_feature_extractor
+from utils import check_directory, get_feature_extractor
 from visualize import plot_losses, plot_confusion_matrix
 from evaluate import evaluate_model
 
@@ -31,7 +31,9 @@ train_losses, val_losses = train_source(
     model, source_train_loader, source_val_loader, criterion_class, optimizer, scheduler
 )
 
-torch.save(model.state_dict(), "source_model.pth")
+check_directory("./checkpoints")
+save_path = "./checkpoints/source_model.pth"
+torch.save(model.state_dict(), save_path)
 
 plot_losses({"Training Loss": train_losses, "Validation Loss": val_losses}, title="Training Loss Over Epochs")
 
@@ -61,7 +63,9 @@ train_class_losses, train_domain_losses, val_class_losses, val_domain_losses = t
     criterion_class, criterion_domain, optimizer, scheduler
 )
 
-torch.save(model.state_dict(), "adversarial_model.pth")
+check_directory("./checkpoints")
+save_path = "./checkpoints/adversarial_model.pth"
+torch.save(model.state_dict(), save_path)
 
 adversarial_losses = {
     "Training Class Loss": train_class_losses,
